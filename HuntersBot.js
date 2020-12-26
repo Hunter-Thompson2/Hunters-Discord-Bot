@@ -12,9 +12,19 @@ client.on('ready', () => {
 client.on('message', commandHandler);
 
 async function commandHandler(msg) {
-    if (!msg.content.startsWith('/')) return;
+    let commandFull;
+    let command;
+    let args;
+    let prefix = '/';
+    if (!msg.content.startsWith(prefix)) return;
 
-    if (msg.content === '/join') {
+    commandFull = msg.content.slice(1).split(" ");
+    command = commandFull[0];
+    commandFull.shift();
+    args = commandFull;
+
+
+    if (command === 'join') {
         if (msg.member.voice.channel) {
             connection = await msg.member.voice.channel.join();
         } else {
@@ -22,14 +32,15 @@ async function commandHandler(msg) {
         }
         return;
     }
-    else if (msg.content === '/leave') {
+    else if (command === 'leave') {
         if (msg.member.voice.channel) {
             //client.leaveVoiceChannel(msg.member.voice.channel);
-            msg.guild.voiceConnection.disconnect();
-            console.log('leaving channel!')
+            connection.disconnect();
+            //voiceChannel.leave();
+            console.log('leaving channel!');
         }
         else
-            msg.reply('you have to be in the voice channel first!')
+            msg.reply('you have to be in the voice channel first!');
         return;
     }
 }
